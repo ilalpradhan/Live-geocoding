@@ -1,0 +1,156 @@
+doctype html
+html
+  head
+    title= title
+    script(src="https://code.jquery.com/jquery-3.2.1.js")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")  
+    
+    
+    script(src="https://unpkg.com/axios/dist/axios.min.js")
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="")
+
+    script(src="https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js")
+    link(rel="stylesheet" href="https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css")
+    link(href="stylesheets/style.css", rel="stylesheet", type="text/css")
+    script(src="javascripts/client.js")
+  body(onload='init()')
+    mixin booleanToString(boolData, className)
+            if (boolData == true)
+                td(class=className)="Yes"
+            else
+                td(class=className)="No"
+                  //form(action="/mailer")
+    #NotaForm
+        .joubotron   
+            div    
+                form(action="/mailer")
+                    button.btn.btn-primary(type="submit") Create
+                //- button.btn.btn-primary(onclick='displayform()') Create // for single page app
+            div(class="tableContent")
+                h1 Table of Contacts:
+                input#searchByFirstName( type="text",onkeyup="myfirstnameFunction()", placeholder="Search by First Name..", class="search")
+                input#searchByLastName( type="text", onkeyup="secondNameFunction()", placeholder="Search by Last Name..", class="search")
+                input#searchByAddress( type="text", onkeyup="addressfunction()" placeholder="Search by Address.", class="search")
+                br 
+                br 
+            
+                .table-responsive
+                    table#tableid
+                        thead
+                            tr.header
+                                th Full Name
+                                th Address
+                                th Email
+                                th Phone
+                                th Can Mail
+                                th Can Call
+                                th Can Email
+                                th Edit Bar
+                        tbody
+                                each contact in contacts                                
+                                    tr(onclick='GoToLocation(this)')
+                                        td.contactFullName=contact.prefix + "   " + contact.firstName + " " + contact.lastName
+                                        td.contactFullAddress=contact.street + ", " + contact.city + ", " + contact.state + ", " + contact.zip
+                                        td.contactEmail=contact.email
+                                        td.contactPhone=contact.phone
+                                        +booleanToString(contact.canMail, "contactCanMail")
+                                        +booleanToString(contact.canCall, "contactCanCall")
+                                        +booleanToString(contact.canEmail, "contactCanEmail")
+                                        td(hidden).contactprefix=contact.prefix
+                                        td(hidden).contactfirstName=contact.firstName
+                                        td(hidden).contactlastName=contact.lastName
+                                        td(hidden).contactstreet=contact.street
+                                        td(hidden).contactcity=contact.city
+                                        td(hidden).contactstate=contact.state                                   
+                                        td(hidden).contactzip=contact.zip                                  
+                                        td(hidden).contactlatlng=contact.latlng
+                                        td(hidden).databaseId=contact._id
+                                        td(class="updateButton btn" onclick='showform(this)')="Update"
+                                        td(class="deleteButton btn" onclick='deleteid(this)')="Delete"
+            #mapid 
+    #form
+        .joubotron
+                 .container(class = "mainContent")
+                        form(id="contactform") 
+                            .row
+                                .col
+                                    .card
+                                        .card-header Welcome
+                                        .card-body
+
+                                            div  
+                                                span 
+                                                    label(for="firstName") First Name:
+                                                    input(type="text",id= "firstName", name="firstName")
+                                                
+                                                span 
+                                                    label(for="lastName") Last Name:
+                                                    input(type="text",id="lastName", name="lastName")
+                                            div
+                                                span 
+                                                    label(for="street") Street:
+                                                    input(type="text",id="street", name="street")
+                                                span 
+                                                    label(for="city") City:
+                                                    input(type="text",id='city', name="city")
+                                            div
+                                                span 
+                                                    label(for="state") State:
+                                                span
+                                                    select#state(name="state")
+                                                        - var States = [ "NJ", "NY", "PA", "CT"];
+                                                        each state in States
+                                                            option(value=state) #{state}
+                                                    
+                                                span 
+                                                    label(for="zip") Zip:
+                                                    input(type="text", id="zip", name="zip")
+                                            div
+                                                span 
+                                                    label(for="phone") Phone:
+                                                    input(type="text",id="phone", name="phone")
+                                                
+                                                span 
+                                                    label(for="email") Email:
+                                                    input(type="text",id="email", name="email")
+                                            div
+                                                span
+                                                    label(class="Prefix") Mr./Mrs./Ms./Dr.:                 
+                                                span
+                                                    label(for="Mr") Mr.
+                                                    input(type="radio", name="prefix", value="Mr." checked)
+                                                span    
+                                                    label(for="Mrs") Mrs.
+                                                    input(type="radio", name="prefix", value="Mrs." )
+                                                span    
+                                                    label(for="Ms") Ms.
+                                                    input(type="radio", name="prefix", value="Ms.")
+                                                span
+                                                    label(for="Dr") Dr.
+                                                    input(type="radio", name="prefix", value="Dr.")
+                                            div
+                                                span
+                                                    label(for="contactMethod" class="labelFormat") How may we contact you?:
+                                                span
+                                                    label(for="checkBoxPhone") Phone:   
+                                                    input#checkBoxPhone(type="checkbox", name="checkBoxPhone", value="Phone")
+                                                
+                                                span
+                                                    label(for="checkBoxMail") Mail: 
+                                                    input#checkBoxMail(type="checkbox", name="checkBoxMail", value="Mail")
+                                                
+                                                span
+                                                    label(for="checkBoxEmail") Email:
+                                                    input#checkBoxEmail(type="checkbox", name="checkBoxEmail", value="Email") 
+                                                
+                                                span
+                                                    label(for="checkBoxAny") Any: 
+                                                    input#checkBoxAny(type="checkbox", name="checkBoxAny", value="Any" checked)
+                                            div
+                                                span(hidden)
+                                                    input(id="dBid",name="dBid", type="text")
+                                            div    
+                                                button#submitButton.btn.btn-primary(type="submit",onclick="updateform(contactform)") Submit       

@@ -1,0 +1,92 @@
+doctype html
+html
+    head
+        title HTML page for the form
+        script(src="https://code.jquery.com/jquery-3.2.1.js")
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+        script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")  
+        
+        //- script(src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.js")
+        link(href="stylesheets/style.css", rel="stylesheet", type="text/css")
+
+    body
+        block content
+            .joubotron
+                    .container(class = "mainContent")
+                        form(action="/mailer", method="post")   
+                            .row
+                                .col
+                                    .card
+                                        .card-header Welcome
+
+                                        .card-body
+                                            div
+                                                span 
+                                                    label(for="firstName") First Name:
+                                                    input(type="text",id="firstName", name="firstName")
+                                                
+                                                span 
+                                                    label(for="lastName") Last Name:
+                                                    input(type="text",id="lastName", name="lastName")
+                                            div
+                                                span 
+                                                    label(for="street") Street:
+                                                    input(type="text",id="street", name="street")
+                                                span 
+                                                    label(for="city") City:
+                                                    input(type="text",id='city', name="city")
+                                            div
+                                                span 
+                                                    label(for="state") State:
+                                                span
+                                                    select#state(name="state")
+                                                        - var States = [ 'AL', 'AK', 'AS', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FM', 'FL', 'GA', 'GU', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MH', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'MP', 'OH', 'OK', 'OR', 'PW', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'VA', 'WA', 'WV', 'WI', 'WY' ];
+                                                        each state in States
+                                                            option(value=state) #{state}
+                                                    
+                                                span 
+                                                    label(for="zip") Zip:
+                                                    input(type="text", name="zip")
+                                            div
+                                                span 
+                                                    label(for="phone") Phone:
+                                                    input(type="text",id="phone", name="phone")
+                                                
+                                                span 
+                                                    label(for="email") Email:
+                                                    input(type="text",id="email", name="email")
+                                            div
+                                                span
+                                                    label(class="Prefix") Mr./Mrs./Ms./Dr.:                 
+                                                span
+                                                    label(for="Mr") Mr.
+                                                    input(type="radio", name="prefix", value="Mr." checked)
+                                                span    
+                                                    label(for="Mrs") Mrs.
+                                                    input(type="radio", name="prefix", value="Mrs.")
+                                                span    
+                                                    label(for="Ms") Ms.
+                                                    input(type="radio", name="prefix", value="Ms.")
+                                                span
+                                                    label(for="Dr") Dr.
+                                                    input(type="radio", name="prefix", value="Dr.")
+                                            div
+                                                span
+                                                    label(for="contactMethod" class="labelFormat") How may we contact you?:
+                                                span
+                                                    label(for="checkBoxPhone") Phone:   
+                                                    input#checkBoxPhone(type="checkbox", name="checkBoxPhone", value="Phone")
+                                                
+                                                span
+                                                    label(for="checkBoxMail") Mail: 
+                                                    input#checkBoxMail(type="checkbox", name="checkBoxMail", value="Mail")
+                                                
+                                                span
+                                                    label(for="checkBoxEmail") Email:
+                                                    input#checkBoxEmail(type="checkbox", name="checkBoxEmail", value="Email") 
+                                                
+                                                span
+                                                    label(for="checkBoxAny") Any: 
+                                                    input#checkBoxAny(type="checkbox", name="checkBoxAny", value="Any" checked)
+                                            div    
+                                                button#submitButton.btn.btn-primary(type="submit") Submit       
